@@ -39,4 +39,5 @@ fun Application.applicationModule() {
             call.respondText("OK")
         }
     }
+    otherModule()
 }
