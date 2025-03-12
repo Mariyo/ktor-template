@@ -2,7 +2,6 @@
   <configuration default="false" name="Run" type="JetRunConfigurationType" focusToolWindowBeforeRun="true">
     <envs>
       <env name="DEVELOPMENT" value="true" />
-      <env name="ESOPA_BLOG_POSTS_PATH" value="data/esopa/blog/posts" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="com.example.ApplicationKt" />
     <module name="ktor-template.main" />
