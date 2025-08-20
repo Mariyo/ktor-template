@@ -29,11 +29,6 @@ services:
     depends_on:
       - proxy
     command: ./gradlew run --no-daemon --project-cache-dir /project-cache
-  #    command: ./gradlew run -t -Dio.ktor.development=true -Dorg.gradle.jvmargs="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
-  #    command: ./gradlew classes -t -x test & ./gradlew testClasses & ./gradlew run -t -Dio.ktor.development=true -Dorg.gradle.jvmargs="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
-  #    command: sleep infinity
-  # Pri tomto prestanu fungovat ENV premenne
-  #    command: sh -c "./gradlew classes -t -x test --no-daemon & ./gradlew run -t -Dio.ktor.development=true -Dorg.gradle.jvmargs=\"-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005\" --no-daemon" #    command: sleep infinity
 
 volumes:
   gradle-data:
