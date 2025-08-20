@@ -33,7 +33,7 @@ fun Application.applicationModule() {
     }
     routing {
         get("/") {
-            call.respondText("Hello Ktor!")
+            call.respondText("Hello Ktor! man")
         }
         get("/health") {
             call.respondText("OK")

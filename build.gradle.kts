@@ -40,9 +40,15 @@ tasks.test {
     useJUnitPlatform()
 }
 
+val isDevelopment = (System.getenv("APP_ENV") ?: "").equals("DEVELOPMENT", ignoreCase = true)
+
 kotlin {
     jvmToolchain(21)
     application {
         mainClass.set("com.example.ApplicationKt")
+        applicationDefaultJvmArgs = if (isDevelopment) listOf(
+            "-Dio.ktor.development=true",
+            "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+        ) else emptyList()
     }
 }
