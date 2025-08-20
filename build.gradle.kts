@@ -1,10 +1,6 @@
 plugins {
-    val gradleKotlinJvmPlugin: String by System.getProperties()
-    kotlin("jvm") version gradleKotlinJvmPlugin
-
-    val gradleKtorPlugin: String by System.getProperties()
-    id("io.ktor.plugin") version gradleKtorPlugin
-
+    kotlin("jvm") version "2.1.10"
+    id("io.ktor.plugin") version "3.1.1"
     application
 }
 
@@ -16,24 +12,17 @@ repositories {
 }
 
 dependencies {
+    val ktorVersion = "3.1.1"
     testImplementation(kotlin("test"))
-
-    val ktorVersion: String by project
     implementation("io.ktor:ktor-server-status-pages:${ktorVersion}")
     implementation("io.ktor:ktor-server-core:${ktorVersion}")
     implementation("io.ktor:ktor-server-auth:${ktorVersion}")
     implementation("io.ktor:ktor-server-compression:${ktorVersion}")
     implementation("io.ktor:ktor-server-html-builder:${ktorVersion}")
     implementation("io.ktor:ktor-server-netty:${ktorVersion}")
-
-    val kotlinxVersion: String by project
-    implementation("org.jetbrains.kotlinx:kotlinx-html:${kotlinxVersion}")
-
-    val kotlinCssJvmVersion: String by project
-    implementation("org.jetbrains.kotlin-wrappers:kotlin-css-jvm:${kotlinCssJvmVersion}")
-
-    val logbackVersion: String by project
-    implementation("ch.qos.logback:logback-classic:${logbackVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0}")
+    implementation("org.jetbrains.kotlin-wrappers:kotlin-css-jvm:2025.8.16")
+    implementation("ch.qos.logback:logback-classic:1.5.18")
 }
 
 tasks.test {
