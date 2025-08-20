@@ -29,7 +29,7 @@ tasks.test {
     useJUnitPlatform()
 }
 
-val isDevelopment = (System.getenv("APP_ENV") ?: "").equals("DEVELOPMENT", ignoreCase = true)
+val isDevelopment = (System.getenv("APP_ENV") ?: "DEVELOPMENT").equals("DEVELOPMENT", ignoreCase = true)
 
 kotlin {
     jvmToolchain(21)
