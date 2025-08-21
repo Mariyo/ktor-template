@@ -9,15 +9,23 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
+  gradle-init:
+    image: busybox:latest
+    volumes:
+      - gradle-data:/gradle-home
+      - gradle-project-cache:/gradle-project-cache
+    command: sh -c "mkdir -p /gradle-home /gradle-project-cache && chown -R 1000:1000 /gradle-home /gradle-project-cache"
+    restart: "no"
+
   app:
-    build: .
+    image: eclipse-temurin:21-jdk
     labels:
       traefik.http.routers.client.rule: "Host(`ktor-template.localhost`)"
       traefik.http.services.client.loadbalancer.server.port: "8080"
     volumes:
       - ./../../:/app
       - gradle-data:/gradle-home
-      - gradle-project-cache:/project-cache
+      - gradle-project-cache:/gradle-project-cache
     working_dir: /app
     user: "1000:1000"
     ports:
@@ -28,7 +36,14 @@ services:
       GRADLE_USER_HOME: "/gradle-home"
     depends_on:
       - proxy
-    command: ./gradlew run --no-daemon --project-cache-dir /project-cache
+      - gradle-init
+    command: ./gradlew run --no-daemon --project-cache-dir /gradle-project-cache
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://0.0.0.0:8080/health || exit 1" ]
+      interval: 30s
+      timeout: 2s
+      retries: 5
+      start_period: 60s
 
 volumes:
   gradle-data:
