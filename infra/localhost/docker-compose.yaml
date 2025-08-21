@@ -30,7 +30,6 @@ services:
     user: "1000:1000"
     ports:
       - "5005:5005"
-      - "8080:8080"
     environment:
       APP_ENV: "DEVELOPMENT"
       GRADLE_USER_HOME: "/gradle-home"
