@@ -29,7 +29,7 @@
 ### Running the Application in a Container
 
 1. **Start the containers**  
-   Open the Command Palette (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>), type `Run Task`, and select `Ktor Template - Start containers`. Container configuration is in `infra/localhost/`.
+   Open the Command Palette (`Ctrl + Shift + P`), type `Run Task`, and select `Ktor Template - Start containers`. Container configuration is in `infra/localhost/`.
 
 2. **Stop the containers**  
    Use the task `Ktor Template - Stop containers`.
