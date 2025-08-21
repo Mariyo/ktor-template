@@ -11,7 +11,7 @@
 
 1. Run application by `Run in container` configuration.
 2. Run `Remote Debug` to attach debugger to application in container.
-3. Open `http://ktor-template:8080/` in browser.
+3. Open `http://ktor-template.localhost/` in browser.
 4. Change code in `src/main/kotlin` and see changes in browser.
 5. Run `Build on change` configuration or just hit `CTRL + F9`
 
@@ -19,7 +19,6 @@
 
 ### Prerequisites
 
-- [VS Code](https://code.visualstudio.com/)
 - [Docker](https://www.docker.com/)
 - Recommended VS Code extensions:
   - Kotlin Language
@@ -28,19 +27,12 @@
 
 ### Running the Application in a Container
 
-1. **Start the containers**  
-   Open the Command Palette (`Ctrl + Shift + P`), type `Run Task`, and select `Ktor Template - Start containers`. Container configuration is in `infra/localhost/`.
-
-2. **Stop the containers**  
-   Use the task `Ktor Template - Stop containers`.
-
-### Debugging
-
-In VS Code, go to the Run & Debug panel and select `Kotlin Attach` to start a remote debugging session.
-
-### Building Locally
-
-- To build the project and watch for changes, run the task `Ktor Template - Build on change`.
+1. **Start application:** Open the Command Palette (`Ctrl + Shift + P`), type `Run Task`, and select `Ktor Template - Start containers`. 
+   - Container configuration is in `infra/localhost/`.
+   - Open `http://ktor-template.localhost/` in browser.
+2. **Debugging:** go to the Run & Debug panel and select `Kotlin Attach` to start a remote debugging session.
+3. **Build on change:** Use the task `Ktor Template - Build on change`.
+4. **Stop the containers:** Use the task `Ktor Template - Stop containers`.
 
 ### Useful Tasks
 
