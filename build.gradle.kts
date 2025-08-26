@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    val ktorVersion = "3.1.1"
+    val ktorVersion = "3.2.3"
     testImplementation(kotlin("test"))
     implementation("io.ktor:ktor-server-status-pages:${ktorVersion}")
     implementation("io.ktor:ktor-server-core:${ktorVersion}")
