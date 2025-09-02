@@ -21,7 +21,7 @@ dependencies {
     implementation("io.ktor:ktor-server-html-builder:${ktorVersion}")
     implementation("io.ktor:ktor-server-netty:${ktorVersion}")
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0}")
-    implementation("org.jetbrains.kotlin-wrappers:kotlin-css-jvm:2025.8.16")
+    implementation("org.jetbrains.kotlin-wrappers:kotlin-css-jvm:2025.9.0")
     implementation("ch.qos.logback:logback-classic:1.5.18")
 }
 
