@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.1.10"
+    id("org.jetbrains.kotlin.jvm") version "2.2.20"
     id("io.ktor.plugin") version "3.1.1"
     application
 }
@@ -14,14 +14,12 @@ repositories {
 dependencies {
     val ktorVersion = "3.1.1"
     testImplementation(kotlin("test"))
-    implementation("io.ktor:ktor-server-status-pages:${ktorVersion}")
-    implementation("io.ktor:ktor-server-core:${ktorVersion}")
-    implementation("io.ktor:ktor-server-auth:${ktorVersion}")
-    implementation("io.ktor:ktor-server-compression:${ktorVersion}")
-    implementation("io.ktor:ktor-server-html-builder:${ktorVersion}")
-    implementation("io.ktor:ktor-server-netty:${ktorVersion}")
-    implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0}")
-    implementation("org.jetbrains.kotlin-wrappers:kotlin-css-jvm:2025.8.16")
+    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-auth:$ktorVersion")
+    implementation("io.ktor:ktor-server-compression:$ktorVersion")
+    implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("ch.qos.logback:logback-classic:1.5.18")
 }
 
