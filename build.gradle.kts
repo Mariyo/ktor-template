@@ -1,6 +1,6 @@
 plugins {
     id("org.jetbrains.kotlin.jvm") version "2.2.20"
-    id("io.ktor.plugin") version "3.1.1"
+    id("io.ktor.plugin") version "3.1.1" // Do not upgrade from 3.1.1, it has issues with Hot Reload
     application
 }
 
@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    val ktorVersion = "3.1.1"
+    val ktorVersion = "3.1.1" // Do not upgrade from 3.1.1, it has issues with Hot Reload
     testImplementation(kotlin("test"))
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
     implementation("io.ktor:ktor-server-core:$ktorVersion")
