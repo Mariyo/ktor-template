@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "2.2.20"
+    id("org.jetbrains.kotlin.jvm") version "2.3.0"
     id("io.ktor.plugin") version "3.1.1" // Do not upgrade from 3.1.1, it has issues with Hot Reload
     application
 }
