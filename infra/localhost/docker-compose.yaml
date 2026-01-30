@@ -2,7 +2,7 @@ name: ktor-template
 
 services:
   proxy:
-    image: traefik:v3.1.2
+    image: traefik:v3.6.7
     command: --providers.docker
     ports:
       - "80:80"
@@ -20,6 +20,7 @@ services:
   app:
     image: eclipse-temurin:21-jdk
     labels:
+      traefik.enable: "true"
       traefik.http.routers.client.rule: "Host(`ktor-template.localhost`)"
       traefik.http.services.client.loadbalancer.server.port: "8080"
     volumes:
