@@ -15,6 +15,12 @@
 4. Change code in `src/main/kotlin` and see changes in browser.
 5. Run `Build on change` configuration or just hit `CTRL + F9`
 
+### Stop containers
+
+```
+cd infra/localhost && docker compose down
+```
+
 ## Development Setup in VS Code
 
 ### Prerequisites
