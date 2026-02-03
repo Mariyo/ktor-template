@@ -2,13 +2,25 @@
   "version": "0.2.0",
   "configurations": [
     {
-        "type": "kotlin",
-        "request": "attach",
-        "name": "Kotlin Attach",
-        "hostName": "localhost",
-        "port": 5005,
-        "timeout": 30000,
-        "projectRoot": "${workspaceFolder}"
+      "type": "kotlin",
+      "request": "launch",
+      "name": "Run Ktor Application",
+      "projectRoot": "${workspaceFolder}",
+      "mainClass": "com.example.ApplicationKt",
+      "preLaunchTask": "Ktor Template - Build",
+      "env": {
+        "DEVELOPMENT": "true"
+      },
+      "vmOptions": "-Dio.ktor.development=true"
+    },
+    {
+      "type": "kotlin",
+      "request": "attach",
+      "name": "Kotlin Attach (Remote Debug)",
+      "hostName": "localhost",
+      "port": 5005,
+      "timeout": 30000,
+      "projectRoot": "${workspaceFolder}"
     }
   ]
 }

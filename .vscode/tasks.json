@@ -2,22 +2,78 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Ktor Template - Build",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": ["classes", "-x", "test"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Ktor Template - Build on change",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": ["classes", "-t", "-x", "test"],
+            "isBackground": true,
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Ktor Template - Test",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": ["test"],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Ktor Template - Clean",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": ["clean"],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
             "label": "Ktor Template - Start containers",
             "type": "shell",
             "command": "docker compose -f infra/localhost/docker-compose.yaml up --build",
-            "problemMatcher": []
+            "isBackground": true,
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
         },
         {
             "label": "Ktor Template - Stop containers",
             "type": "shell",
             "command": "docker compose -f infra/localhost/docker-compose.yaml down",
-            "problemMatcher": []
-        },
-        {
-            "label": "Ktor Template - Build on change",
-            "type": "shell",
-            "command": "./gradlew classes -t -x test",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
         }
     ]
 }
