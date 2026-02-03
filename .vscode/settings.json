@@ -1,0 +1,16 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.import.gradle.home": "${workspaceFolder}",
+  "files.exclude": {
+    "**/.gradle": true,
+    "**/build": true,
+    "**/.kotlin": true
+  },
+  "kotlin.debugAdapter.enabled": true,
+  "kotlin.languageServer.enabled": true,
+  "kotlin.compiler.jvm.target": "21",
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  }
+}
