@@ -45,7 +45,7 @@ cd infra/localhost && docker compose down
 
 1. **Start application:** Open the Command Palette (`Ctrl + Shift + P`), type `Run Task`, and select `Ktor Template - Start containers`. 
    - Container configuration is in `infra/localhost/`.
-   - Open `http://ktor-template.localhost/` in browser.
+   - Open [http://ktor-template.localhost/](http://ktor-template.localhost/) in browser.
 2. **Debugging:** Go to the Run & Debug panel and select `Kotlin Attach (Remote Debug)` to start a remote debugging session.
 3. **Build on change:** Use the task `Ktor Template - Build on change`.
 4. **Stop the containers:** Use the task `Ktor Template - Stop containers`.

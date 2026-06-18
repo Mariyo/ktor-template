@@ -4,8 +4,18 @@
         {
             "label": "Ktor Template - Build",
             "type": "shell",
-            "command": "./gradlew",
-            "args": ["classes", "-x", "test"],
+            "command": "docker",
+            "args": [
+                "container",
+                "exec",
+                "-i",
+                "ktor-template-app-1",
+                "./gradlew",
+                "classes",
+                "-x",
+                "test",
+                "--no-daemon"
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -19,8 +29,19 @@
         {
             "label": "Ktor Template - Build on change",
             "type": "shell",
-            "command": "./gradlew",
-            "args": ["classes", "-t", "-x", "test"],
+            "command": "docker",
+            "args": [
+                "container",
+                "exec",
+                "-i",
+                "ktor-template-app-1",
+                "./gradlew",
+                "classes",
+                "-t",
+                "-x",
+                "test",
+                "--no-daemon"
+            ],
             "isBackground": true,
             "problemMatcher": [],
             "presentation": {
@@ -31,8 +52,16 @@
         {
             "label": "Ktor Template - Test",
             "type": "shell",
-            "command": "./gradlew",
-            "args": ["test"],
+            "command": "docker",
+            "args": [
+                "container",
+                "exec",
+                "-i",
+                "ktor-template-app-1",
+                "./gradlew",
+                "test",
+                "--no-daemon"
+            ],
             "group": {
                 "kind": "test",
                 "isDefault": true
@@ -46,8 +75,16 @@
         {
             "label": "Ktor Template - Clean",
             "type": "shell",
-            "command": "./gradlew",
-            "args": ["clean"],
+            "command": "docker",
+            "args": [
+                "container",
+                "exec",
+                "-i",
+                "ktor-template-app-1",
+                "./gradlew",
+                "clean",
+                "--no-daemon"
+            ],
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always",

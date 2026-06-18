@@ -3,7 +3,9 @@ name: ktor-template
 services:
   proxy:
     image: traefik:v3.6.7
-    command: --providers.docker
+    command:
+      - --providers.docker
+      - --providers.docker.exposedbydefault=false
     ports:
       - "80:80"
     volumes:
