@@ -1,8 +1,10 @@
 {
   "recommendations": [
     "fwcd.kotlin",
-    "mathiasfrohlich.kotlin",
     "ms-azuretools.vscode-docker",
     "vscjava.vscode-gradle"
+  ],
+  "unwantedRecommendations": [
+    "mathiasfrohlich.kotlin"
   ]
 }
