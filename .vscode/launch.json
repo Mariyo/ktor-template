@@ -2,22 +2,21 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "kotlin",
+      "type": "java",
       "request": "attach",
+      "name": "Kotlin Attach (Dev Container)",
+      "preLaunchTask": "Devcontainer: Start Dev Loop",
       "postDebugTask": "Devcontainer: Stop Dev Loop",
       "hostName": "localhost",
-      "timeout": 60000,
-      "projectRoot": "${workspaceFolder}"
+      "port": 5005
     },
     {
-      "type": "kotlin",
+      "type": "java",
       "request": "attach",
       "name": "Kotlin Attach (Docker Compose)",
       "preLaunchTask": "Localhost: Ktor Template - Start containers",
       "hostName": "localhost",
-      "port": 5005,
-      "timeout": 60000,
-      "projectRoot": "${workspaceFolder}"
+      "port": 5005
     }
   ]
 }
