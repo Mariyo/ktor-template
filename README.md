@@ -1,9 +1,10 @@
 # Ktor Template
 
-Opinionated starter for a Kotlin + Ktor backend with two development paths:
+Opinionated starter for a Kotlin + Ktor backend with three development paths:
 
 1. VS Code Dev Container (best zero-setup team experience)
 2. IntelliJ IDEA (local or Docker)
+3. IntelliJ IDEA or VS Code + Docker Compose runtime (`infra/localhost`)
 
 ## Quick Start (Recommended)
 
@@ -46,6 +47,31 @@ VS Code launch configurations:
 2. Open `http://localhost:8080/`.
 3. Edit code in `src/main/kotlin`.
 4. Rebuild on change with `Ctrl+F9` (or your build-on-change config).
+
+### C) IntelliJ IDEA or VS Code with app running in Docker Compose
+
+Use this option when you want to edit code in your IDE but run the application inside Docker Compose defined in `infra/localhost`.
+
+1. Start containers:
+
+```bash
+docker compose -f infra/localhost/docker-compose.yaml up --build
+```
+
+Or in VS Code, run task `Localhost: Ktor Template - Start containers`.
+
+2. Open [http://ktor-template.localhost/](http://ktor-template.localhost/).
+3. Develop in IntelliJ IDEA or VS Code as usual.
+4. For remote debugging, attach to port `5005`:
+	- VS Code: `Kotlin Attach (Docker Compose)`
+	- IntelliJ IDEA: use your `Remote Debug` configuration
+5. Stop containers when finished:
+
+```bash
+docker compose -f infra/localhost/docker-compose.yaml down
+```
+
+Or in VS Code, run task `Localhost: Ktor Template - Stop containers`.
 
 
 
