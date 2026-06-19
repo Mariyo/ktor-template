@@ -26,12 +26,21 @@ cd infra/localhost && docker compose down
 ### Prerequisites
 
 - [Docker](https://www.docker.com/) (for container-based development)
+- [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (for VS Code Dev Container workflow)
 - JDK 21
 - VS Code extensions (recommended extensions will be suggested when you open the project):
   - Kotlin Language (`fwcd.kotlin`)
   - Kotlin Language (`mathiasfrohlich.kotlin`)
   - Docker (`ms-azuretools.vscode-docker`)
   - Gradle for Java (`vscjava.vscode-gradle`)
+
+## Running in VS Code Dev Container
+
+1. Open the project in VS Code.
+2. Open the Command Palette (`Ctrl+Shift+P`) and run `Dev Containers: Reopen in Container`.
+3. After the container is ready, run the task `Devcontainer: Start Dev Loop`. This starts class watch and app run tasks in parallel.
+4. Open [http://ktor-template.localhost/](http://ktor-template.localhost/) in browser.
+5. To stop the loop, run `Devcontainer: Stop Dev Loop`.
 
 ### Running the Application Locally
 
