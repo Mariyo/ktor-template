@@ -4,13 +4,8 @@
         {
             "label": "Ktor Template - Build",
             "type": "shell",
-            "command": "docker",
+            "command": "./gradlew",
             "args": [
-                "container",
-                "exec",
-                "-i",
-                "ktor-template-app-1",
-                "./gradlew",
                 "classes",
                 "-x",
                 "test",
@@ -27,38 +22,32 @@
             }
         },
         {
-            "label": "Ktor Template - Build on change",
+            "label": "Ktor Template - Watch Classes",
             "type": "shell",
-            "command": "docker",
+            "command": "./gradlew",
             "args": [
-                "container",
-                "exec",
-                "-i",
-                "ktor-template-app-1",
-                "./gradlew",
                 "classes",
                 "-t",
                 "-x",
                 "test",
-                "--no-daemon"
+                "--no-daemon",
+                "-Dkotlin.incremental=false"
             ],
             "isBackground": true,
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always",
                 "panel": "dedicated"
+            },
+            "runOptions": {
+                "instanceLimit": 1
             }
         },
         {
             "label": "Ktor Template - Test",
             "type": "shell",
-            "command": "docker",
+            "command": "./gradlew",
             "args": [
-                "container",
-                "exec",
-                "-i",
-                "ktor-template-app-1",
-                "./gradlew",
                 "test",
                 "--no-daemon"
             ],
@@ -75,16 +64,57 @@
         {
             "label": "Ktor Template - Clean",
             "type": "shell",
-            "command": "docker",
+            "command": "./gradlew",
             "args": [
-                "container",
-                "exec",
-                "-i",
-                "ktor-template-app-1",
-                "./gradlew",
                 "clean",
                 "--no-daemon"
             ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Ktor Template - Run App",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": [
+                "run",
+                "--no-daemon"
+            ],
+            "isBackground": true,
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "runOptions": {
+                "instanceLimit": 1
+            }
+        },
+        {
+            "label": "Ktor Template - Start Dev Loop",
+            "type": "shell",
+            "command": "echo",
+            "args": [
+                "Starting app and watch tasks"
+            ],
+            "dependsOn": [
+                "Ktor Template - Watch Classes",
+                "Ktor Template - Run App"
+            ],
+            "dependsOrder": "parallel",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Ktor Template - Stop Dev Loop",
+            "type": "shell",
+            "command": "pkill -f 'GradleDaemon|GradleMain|org.gradle.launcher.GradleMain' || true",
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always",

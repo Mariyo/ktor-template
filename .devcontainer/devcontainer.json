@@ -1,0 +1,48 @@
+{
+  "name": "ktor-template-dev",
+  "image": "mcr.microsoft.com/devcontainers/java:21-trixie",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "moby": false
+    }
+  },
+  "appPort": [
+    "80:8080",
+    "5005:5005"
+  ],
+  "containerEnv": {
+    "APP_ENV": "DEVELOPMENT"
+  },
+  "mounts": [
+    "source=ktor-template-gradle-cache,target=/home/vscode/.gradle,type=volume"
+  ],
+  "forwardPorts": [8080, 5005],
+  "portsAttributes": {
+    "8080": {
+      "label": "Ktor HTTP",
+      "onAutoForward": "notify"
+    },
+    "5005": {
+      "label": "Kotlin Debug"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-gradle",
+        "vscjava.vscode-java-debug",
+        "ms-azuretools.vscode-docker",
+        "Upstash.context7-mcp",
+        "JetBrains.kotlin-server",
+        "yzhang.markdown-all-in-one",
+        "ms-azuretools.vscode-containers",
+        "ms-vscode-remote.remote-containers",
+        "cweijan.vscode-database-client2",
+        "docker.docker",
+        "iulian-radu-at.vscode-tasks-sidebar",
+        "redhat.vscode-yaml"
+      ]
+    }
+  },
+  "postCreateCommand": "sudo chown -R vscode:vscode /home/vscode/.gradle && ./gradlew --version"
+}
