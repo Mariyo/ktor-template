@@ -10,7 +10,7 @@ This tutorial gets you from clone to a running app with the most consistent team
 
 1. Open the repository in VS Code.
 2. Run Command Palette action `Dev Containers: Reopen in Container`.
-3. Run task `Devcontainer: Start Dev Loop`.
+3. Run task `Devcontainer: Start Dev Loop` and optionally attach debugger when prompted by launch configuration `Devcontainer: Kotlin Attach`.
 4. Open [http://localhost:8080/](http://localhost:8080/) or [http://ktor-template.localhost/](http://ktor-template.localhost/).
 5. Edit a file in `src/main/kotlin` and save.
 6. Refresh the page and confirm the change is reflected.
