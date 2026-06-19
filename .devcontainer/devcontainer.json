@@ -30,6 +30,7 @@
       "extensions": [
         "vscjava.vscode-gradle",
         "vscjava.vscode-java-debug",
+        "redhat.java",
         "ms-azuretools.vscode-docker",
         "Upstash.context7-mcp",
         "JetBrains.kotlin-server",

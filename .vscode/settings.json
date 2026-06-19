@@ -1,5 +1,7 @@
 {
   "java.configuration.updateBuildConfiguration": "automatic",
+  "java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-current",
+  "java.import.gradle.java.home": "/usr/lib/jvm/msopenjdk-current",
   "files.exclude": {
     "**/.gradle": true,
     "**/build": true,
