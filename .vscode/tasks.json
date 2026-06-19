@@ -114,7 +114,7 @@
         {
             "label": "Devcontainer: Stop Dev Loop",
             "type": "shell",
-            "command": "pkill -f 'GradleDaemon|GradleMain|org.gradle.launcher.GradleMain' || true",
+            "command": "pkill -f '${workspaceFolder}.*org.gradle.launcher.GradleMain' || true",
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always",
