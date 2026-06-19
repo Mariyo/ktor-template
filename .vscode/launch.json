@@ -7,7 +7,6 @@
       "name": "Devcontainer: Kotlin Attach",
       "preLaunchTask": "Devcontainer: Start Dev Loop",
       "postDebugTask": "Devcontainer: Stop Dev Loop",
-      "projectName": "ktor-template",
       "hostName": "localhost",
       "port": 5005
     },

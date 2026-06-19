@@ -28,15 +28,16 @@ tasks.test {
 }
 
 val isDevelopment = (System.getenv("APP_ENV") ?: "DEVELOPMENT").equals("DEVELOPMENT", ignoreCase = true)
-val isDevContainer = System.getenv("APP_ENV")?.equals("DEVCONTAINER", ignoreCase = true) == true
 
 kotlin {
     jvmToolchain(21)
     application {
         mainClass.set("com.example.ApplicationKt")
         applicationDefaultJvmArgs = buildList {
-            if (isDevelopment || isDevContainer) add("-Dio.ktor.development=true")
-            if (isDevelopment) add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005")
+            if (isDevelopment ) {
+                add("-Dio.ktor.development=true")
+                 add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005")
+            }
         }
     }
 }
