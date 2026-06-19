@@ -10,7 +10,7 @@
     "80:8080"
   ],
   "containerEnv": {
-    "APP_ENV": "DEVCONTAINER"
+    "APP_ENV": "DEVELOPMENT"
   },
   "mounts": [
     "source=ktor-template-gradle-cache,target=/home/vscode/.gradle,type=volume"
