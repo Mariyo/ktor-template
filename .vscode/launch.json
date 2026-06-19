@@ -4,11 +4,8 @@
     {
       "type": "kotlin",
       "request": "attach",
-      "name": "Kotlin Attach (Dev Container)",
-      "preLaunchTask": "Devcontainer: Start Dev Loop",
-      "postDebugTask": "Devcontainer: Stop Dev Loop"
+      "postDebugTask": "Devcontainer: Stop Dev Loop",
       "hostName": "localhost",
-      "port": 5005,
       "timeout": 60000,
       "projectRoot": "${workspaceFolder}"
     },
