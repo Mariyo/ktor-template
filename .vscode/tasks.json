@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Ktor Template - Build",
+            "label": "Devcontainer: Build",
             "type": "shell",
             "command": "./gradlew",
             "args": [
@@ -22,7 +22,7 @@
             }
         },
         {
-            "label": "Ktor Template - Watch Classes",
+            "label": "Devcontainer: Watch Classes",
             "type": "shell",
             "command": "./gradlew",
             "args": [
@@ -44,7 +44,7 @@
             }
         },
         {
-            "label": "Ktor Template - Test",
+            "label": "Devcontainer: Test",
             "type": "shell",
             "command": "./gradlew",
             "args": [
@@ -62,7 +62,7 @@
             }
         },
         {
-            "label": "Ktor Template - Clean",
+            "label": "Devcontainer: Clean",
             "type": "shell",
             "command": "./gradlew",
             "args": [
@@ -76,7 +76,7 @@
             }
         },
         {
-            "label": "Ktor Template - Run App",
+            "label": "Devcontainer: Run App",
             "type": "shell",
             "command": "./gradlew",
             "args": [
@@ -94,15 +94,15 @@
             }
         },
         {
-            "label": "Ktor Template - Start Dev Loop",
+            "label": "Devcontainer: Start Dev Loop",
             "type": "shell",
             "command": "echo",
             "args": [
                 "Starting app and watch tasks"
             ],
             "dependsOn": [
-                "Ktor Template - Watch Classes",
-                "Ktor Template - Run App"
+                "Devcontainer: Watch Classes",
+                "Devcontainer: Run App"
             ],
             "dependsOrder": "parallel",
             "problemMatcher": [],
@@ -112,7 +112,7 @@
             }
         },
         {
-            "label": "Ktor Template - Stop Dev Loop",
+            "label": "Devcontainer: Stop Dev Loop",
             "type": "shell",
             "command": "pkill -f 'GradleDaemon|GradleMain|org.gradle.launcher.GradleMain' || true",
             "problemMatcher": [],
@@ -122,7 +122,7 @@
             }
         },
         {
-            "label": "Ktor Template - Start containers",
+            "label": "Localhost: Ktor Template - Start containers",
             "type": "shell",
             "command": "docker compose -f infra/localhost/docker-compose.yaml up --build",
             "isBackground": true,
@@ -133,7 +133,7 @@
             }
         },
         {
-            "label": "Ktor Template - Stop containers",
+            "label": "Localhost: Ktor Template - Stop containers",
             "type": "shell",
             "command": "docker compose -f infra/localhost/docker-compose.yaml down",
             "problemMatcher": [],

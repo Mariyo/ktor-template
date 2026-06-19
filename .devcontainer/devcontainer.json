@@ -7,8 +7,7 @@
     }
   },
   "appPort": [
-    "80:8080",
-    "5005:5005"
+    "80:8080"
   ],
   "containerEnv": {
     "APP_ENV": "DEVELOPMENT"
