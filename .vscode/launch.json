@@ -4,17 +4,15 @@
     {
       "type": "java",
       "request": "attach",
-      "name": "Kotlin Attach (Dev Container)",
+      "name": "Devcontainer: Kotlin Attach",
       "projectName": "ktor-template",
-      // "preLaunchTask": "Devcontainer: Start Dev Loop",
-      // "postDebugTask": "Devcontainer: Stop Dev Loop",
       "hostName": "localhost",
       "port": 5005
     },
     {
       "type": "java",
       "request": "attach",
-      "name": "Kotlin Attach (Docker Compose)",
+      "name": "Localhost: Kotlin Attach (Docker Compose)",
       "projectName": "ktor-template",
       "preLaunchTask": "Localhost: Ktor Template - Start containers",
       "hostName": "localhost",
