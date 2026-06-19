@@ -6,8 +6,8 @@
       "request": "attach",
       "name": "Kotlin Attach (Dev Container)",
       "projectName": "ktor-template",
-      "preLaunchTask": "Devcontainer: Start Dev Loop",
-      "postDebugTask": "Devcontainer: Stop Dev Loop",
+      // "preLaunchTask": "Devcontainer: Start Dev Loop",
+      // "postDebugTask": "Devcontainer: Stop Dev Loop",
       "hostName": "localhost",
       "port": 5005
     },
