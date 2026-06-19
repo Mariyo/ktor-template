@@ -16,7 +16,7 @@
       "type": "kotlin",
       "request": "attach",
       "name": "Kotlin Attach (Docker Compose)",
-      "preLaunchTask": "Ktor Template - Start containers",
+      "preLaunchTask": "Localhost: Ktor Template - Start containers",
       "hostName": "localhost",
       "port": 5005,
       "timeout": 60000,
