@@ -94,6 +94,20 @@
             }
         },
         {
+            "label": "Devcontainer: Wait for Debug Port",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "for ((i=0; i<60; i++)); do (echo > /dev/tcp/127.0.0.1/5005) >/dev/null 2>&1 && echo Debug_port_ready && exit 0; sleep 0.5; done; echo Timeout_waiting_for_debug_port; exit 1"
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared"
+            }
+        },
+        {
             "label": "Devcontainer: Start Dev Loop",
             "type": "shell",
             "command": "echo",
@@ -102,7 +116,8 @@
             ],
             "dependsOn": [
                 "Devcontainer: Watch Classes",
-                "Devcontainer: Run App"
+                "Devcontainer: Run App",
+                "Devcontainer: Wait for Debug Port"
             ],
             "dependsOrder": "parallel",
             "problemMatcher": [],
