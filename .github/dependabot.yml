@@ -13,3 +13,6 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: [ "version-update:semver-patch" ]
+      - dependency-name: "io.ktor:*"
+      - dependency-name: "io.ktor.plugin"
+      - dependency-name: "gradle-wrapper"
