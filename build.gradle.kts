@@ -20,7 +20,7 @@ dependencies {
     implementation("io.ktor:ktor-server-compression:$ktorVersion")
     implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("ch.qos.logback:logback-classic:1.5.18")
+    implementation("ch.qos.logback:logback-classic:1.6.1")
 }
 
 tasks.test {
