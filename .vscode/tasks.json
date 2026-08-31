@@ -34,7 +34,24 @@
                 "-Dkotlin.incremental=false"
             ],
             "isBackground": true,
-            "problemMatcher": [],
+            "problemMatcher": {
+                "owner": "kotlin",
+                "source": "kotlin",
+                "fileLocation": "absolute",
+                "pattern": {
+                    "regexp": "^(e|w): file://(.*):(\\d+):(\\d+) (.*)$",
+                    "severity": 1,
+                    "file": 2,
+                    "line": 3,
+                    "column": 4,
+                    "message": 5
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*(Calculating task graph|Change detected, executing build|> Task :compileKotlin).*$",
+                    "endsPattern": "^.*(BUILD SUCCESSFUL|BUILD FAILED|FAILURE: Build failed|Waiting for changes to input files).*$"
+                }
+            },
             "presentation": {
                 "reveal": "always",
                 "panel": "dedicated"
@@ -84,7 +101,24 @@
                 "--no-daemon"
             ],
             "isBackground": true,
-            "problemMatcher": [],
+            "problemMatcher": {
+                "owner": "kotlin",
+                "source": "kotlin",
+                "fileLocation": "absolute",
+                "pattern": {
+                    "regexp": "^(e|w): file://(.*):(\\d+):(\\d+) (.*)$",
+                    "severity": 1,
+                    "file": 2,
+                    "line": 3,
+                    "column": 4,
+                    "message": 5
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*(Calculating task graph|> Task :compileKotlin|> Task :run).*$",
+                    "endsPattern": "^.*(Responding at http|BUILD FAILED|FAILURE: Build failed).*$"
+                }
+            },
             "presentation": {
                 "reveal": "always",
                 "panel": "dedicated"
@@ -94,30 +128,15 @@
             }
         },
         {
-            "label": "Devcontainer: Wait for Debug Port",
-            "type": "shell",
-            "command": "bash",
-            "args": [
-                "-c",
-                "for ((i=0; i<60; i++)); do (echo > /dev/tcp/127.0.0.1/5005) >/dev/null 2>&1 && echo Debug_port_ready && exit 0; sleep 0.5; done; echo Timeout_waiting_for_debug_port; exit 1"
-            ],
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "silent",
-                "panel": "shared"
-            }
-        },
-        {
             "label": "Devcontainer: Start Dev Loop",
             "type": "shell",
             "command": "echo",
             "args": [
-                "Starting app and watch tasks"
+                "Dev loop ready - app is responding and JDWP is listening on 5005"
             ],
             "dependsOn": [
                 "Devcontainer: Watch Classes",
-                "Devcontainer: Run App",
-                "Devcontainer: Wait for Debug Port"
+                "Devcontainer: Run App"
             ],
             "dependsOrder": "parallel",
             "problemMatcher": [],
@@ -129,10 +148,10 @@
         {
             "label": "Devcontainer: Stop Dev Loop",
             "type": "shell",
-            "command": "pkill -f 'GradleDaemon|GradleMain|org.gradle.launcher.GradleMain' || true",
+            "command": "pkill -f 'com.example.ApplicationKt' ; pkill -f 'GradleDaemon|GradleMain|org.gradle.launcher.GradleMain' ; true",
             "problemMatcher": [],
             "presentation": {
-                "reveal": "always",
+                "reveal": "silent",
                 "panel": "shared"
             }
         },
@@ -141,7 +160,24 @@
             "type": "shell",
             "command": "docker compose -f infra/localhost/docker-compose.yaml up --build",
             "isBackground": true,
-            "problemMatcher": [],
+            "problemMatcher": {
+                "owner": "kotlin",
+                "source": "kotlin",
+                "fileLocation": "absolute",
+                "pattern": {
+                    "regexp": "^(e|w): file://(.*):(\\d+):(\\d+) (.*)$",
+                    "severity": 1,
+                    "file": 2,
+                    "line": 3,
+                    "column": 4,
+                    "message": 5
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*(Building|Container ktor-template|Calculating task graph|> Task :run).*$",
+                    "endsPattern": "^.*(Responding at http|BUILD FAILED|FAILURE: Build failed).*$"
+                }
+            },
             "presentation": {
                 "reveal": "always",
                 "panel": "dedicated"

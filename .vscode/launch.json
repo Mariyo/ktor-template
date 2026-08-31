@@ -2,22 +2,23 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "java",
+      "type": "intellij_debugger",
       "request": "attach",
       "name": "Devcontainer: Kotlin Attach",
       "preLaunchTask": "Devcontainer: Start Dev Loop",
       "postDebugTask": "Devcontainer: Stop Dev Loop",
       "hostName": "localhost",
-      "port": 5005
+      "port": 5005,
+      "timeout": 60000
     },
     {
-      "type": "java",
+      "type": "intellij_debugger",
       "request": "attach",
       "name": "Localhost: Kotlin Attach (Docker Compose)",
-      "projectName": "ktor-template",
       "preLaunchTask": "Localhost: Ktor Template - Start containers",
       "hostName": "localhost",
-      "port": 5005
+      "port": 5005,
+      "timeout": 60000
     }
   ]
 }

@@ -1,5 +1,14 @@
 {
+  "recommendations": [
+    "ms-vscode-remote.remote-containers",
+    "JetBrains.kotlin-server",
+    "vscjava.vscode-gradle",
+    "redhat.java",
+    "vscjava.vscode-java-debug"
+  ],
+  // Both register the `kotlin` language and hijack breakpoints from JetBrains.kotlin-server.
   "unwantedRecommendations": [
-    "mathiasfrohlich.kotlin"
+    "mathiasfrohlich.kotlin",
+    "fwcd.kotlin"
   ]
 }
