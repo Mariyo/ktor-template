@@ -1,116 +1,209 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Ktor Template - Build",
-            "type": "shell",
-            "command": "docker",
-            "args": [
-                "container",
-                "exec",
-                "-i",
-                "ktor-template-app-1",
-                "./gradlew",
-                "classes",
-                "-x",
-                "test",
-                "--no-daemon"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            }
+  "version": "2.0.0",
+  "tasks": [
+    {
+      // Entry point for F5: compiles continuously, then starts the server. Both keep running.
+      "label": "dev",
+      "dependsOn": ["dev: watch", "dev: server"],
+      "dependsOrder": "sequence",
+      "runOptions": { "instanceLimit": 1 },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev: watch",
+      "type": "shell",
+      "command": "./gradlew --console=plain --project-cache-dir=.gradle/watch -t classes",
+      "isBackground": true,
+      "runOptions": { "instanceLimit": 1 },
+      "presentation": {
+        "panel": "dedicated",
+        "group": "dev",
+        "reveal": "always"
+      },
+      "problemMatcher": {
+        "owner": "kotlin",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^e: file://(.*):(\\d+):(\\d+) (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
         },
-        {
-            "label": "Ktor Template - Build on change",
-            "type": "shell",
-            "command": "docker",
-            "args": [
-                "container",
-                "exec",
-                "-i",
-                "ktor-template-app-1",
-                "./gradlew",
-                "classes",
-                "-t",
-                "-x",
-                "test",
-                "--no-daemon"
-            ],
-            "isBackground": true,
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "dedicated"
-            }
-        },
-        {
-            "label": "Ktor Template - Test",
-            "type": "shell",
-            "command": "docker",
-            "args": [
-                "container",
-                "exec",
-                "-i",
-                "ktor-template-app-1",
-                "./gradlew",
-                "test",
-                "--no-daemon"
-            ],
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "Ktor Template - Clean",
-            "type": "shell",
-            "command": "docker",
-            "args": [
-                "container",
-                "exec",
-                "-i",
-                "ktor-template-app-1",
-                "./gradlew",
-                "clean",
-                "--no-daemon"
-            ],
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "Ktor Template - Start containers",
-            "type": "shell",
-            "command": "docker compose -f infra/localhost/docker-compose.yaml up --build",
-            "isBackground": true,
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "dedicated"
-            }
-        },
-        {
-            "label": "Ktor Template - Stop containers",
-            "type": "shell",
-            "command": "docker compose -f infra/localhost/docker-compose.yaml down",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "shared"
-            }
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^Change detected, executing build",
+          "endsPattern": "^Waiting for changes to input files"
         }
-    ]
+      }
+    },
+    {
+      // Separate --project-cache-dir keeps this build from fighting the watcher over Gradle's lock.
+      // -Pdev turns on Ktor auto-reload and JDWP; without it this is what plain `./gradlew run` does.
+      "label": "dev: server",
+      "type": "shell",
+      "command": "./gradlew --console=plain --project-cache-dir=.gradle/run run -Pdev",
+      "isBackground": true,
+      "runOptions": { "instanceLimit": 1 },
+      "presentation": {
+        "panel": "dedicated",
+        "group": "dev",
+        "reveal": "always"
+      },
+      "problemMatcher": {
+        "pattern": { "regexp": "^(?!)$", "file": 1, "line": 2, "message": 3 },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^> Task :run",
+          "endsPattern": "Responding at http"
+        }
+      }
+    },
+    {
+      // Stops only the two dev-loop daemons (matched by cache dir), not the one Kotlin LSP's Gradle import uses.
+      "label": "dev: stop",
+      "type": "shell",
+      "command": "pkill -f 'project-cache-dir=.gradle/(watch|run)' || true; pkill -f 'Dio.ktor.development=true' || true; ./gradlew --project-cache-dir=.gradle/watch --stop; ./gradlew --project-cache-dir=.gradle/run --stop; echo 'Dev environment stopped.'",
+      "problemMatcher": []
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "./gradlew build",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": [
+        {
+          "owner": "kotlin",
+          "severity": "error",
+          "fileLocation": "absolute",
+          "pattern": {
+            "regexp": "^e: file://(.*):(\\d+):(\\d+) (.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "message": 4
+          }
+        },
+        {
+          "owner": "kotlin",
+          "severity": "warning",
+          "fileLocation": "absolute",
+          "pattern": {
+            "regexp": "^w: file://(.*):(\\d+):(\\d+) (.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "message": 4
+          }
+        }
+      ]
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "./gradlew test",
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": [
+        {
+          "owner": "kotlin",
+          "severity": "error",
+          "fileLocation": "absolute",
+          "pattern": {
+            "regexp": "^e: file://(.*):(\\d+):(\\d+) (.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "message": 4
+          }
+        },
+        {
+          "owner": "kotlin",
+          "severity": "warning",
+          "fileLocation": "absolute",
+          "pattern": {
+            "regexp": "^w: file://(.*):(\\d+):(\\d+) (.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "message": 4
+          }
+        }
+      ]
+    },
+    {
+      // ${fileBasenameNoExtension} only makes sense with a *Test.kt file focused in the editor.
+      "label": "test: current file",
+      "type": "shell",
+      "command": "./gradlew test --tests \"*.${fileBasenameNoExtension}\"",
+      "problemMatcher": [
+        {
+          "owner": "kotlin",
+          "severity": "error",
+          "fileLocation": "absolute",
+          "pattern": {
+            "regexp": "^e: file://(.*):(\\d+):(\\d+) (.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "message": 4
+          }
+        }
+      ]
+    },
+    {
+      "label": "test: watch",
+      "type": "shell",
+      "command": "./gradlew --console=plain -t test",
+      "isBackground": true,
+      "runOptions": { "instanceLimit": 1 },
+      "problemMatcher": {
+        "owner": "kotlin",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^e: file://(.*):(\\d+):(\\d+) (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^Change detected, executing build",
+          "endsPattern": "^Waiting for changes to input files"
+        }
+      }
+    },
+    {
+      // files.exclude hides build/, so opening the HTML report needs its own task; $BROWSER is VS Code's forwarding shim.
+      "label": "test: open report",
+      "type": "shell",
+      "command": "./gradlew test --continue; \"$BROWSER\" build/reports/tests/test/index.html",
+      "problemMatcher": []
+    },
+    {
+      // --debug-jvm suspends the test JVM until a debugger attaches on port 5007 (see build.gradle.kts).
+      "label": "test: debug",
+      "type": "shell",
+      "command": "./gradlew --console=plain --debug-jvm test --tests \"*.${fileBasenameNoExtension}\"",
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always"
+      },
+      "problemMatcher": {
+        "pattern": { "regexp": "^(?!)$", "file": 1, "line": 2, "message": 3 },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^> Task :test",
+          "endsPattern": "Listening for transport dt_socket"
+        }
+      }
+    },
+    {
+      "label": "format",
+      "type": "shell",
+      "command": "./gradlew formatKotlin",
+      "problemMatcher": []
+    }
+  ]
 }

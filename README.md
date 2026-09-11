@@ -1,71 +1,154 @@
-# Template for Ktor backend
+# ktor-template-devcontainer
 
-## Development Setup in IntelliJ IDEA
+Minimal Ktor service template for VS Code devcontainers: instant startup, hot reload, debugger attachment, browser-based Swagger verification, and a ready-made test/lint pipeline.
 
-1. Run application by `Run` configuration
-2. Open `http://localhost:8080/` in browser.
-3. Change code in `src/main/kotlin` and see changes in browser.
-4. Run `Build on change` configuration or just hit `CTRL + F9`
+| Component | Version       |
+| --------- | ------------- |
+| Kotlin    | 2.4.10        |
+| Ktor      | 3.5.2 (Netty) |
+| Gradle    | 9.7.1         |
+| JDK       | 25            |
 
-## Development Setup in IntelliJ IDEA and Docker
+## What is included
 
-1. Run application by `Run in container` configuration.
-2. Run `Remote Debug` to attach debugger to application in container.
-3. Open `http://ktor-template.localhost/` in browser.
-4. Change code in `src/main/kotlin` and see changes in browser.
-5. Run `Build on change` configuration or just hit `CTRL + F9`
+- Devcontainer configured for Java 25 with the desktop-lite feature.
+- F5-style local development loop: continuous compile + app reload + debugger attach.
+- Ktor app with JSON, request IDs, request logging, response compression, Prometheus metrics, health checks, and Swagger UI.
+- Hexagonal architecture (ports & adapters) with a DDD-style domain layer, enforced by Konsist arch tests.
+- Unit tests, Playwright browser tests, and arch tests.
+- Kover coverage, ktlint formatting, and a pre-commit quality gate.
+- Plain and JSON logback profiles, and production-ready fat-jar packaging.
 
-### Stop containers
+## Code architecture
 
+The app code under `src/main/kotlin/com/example` is layered hexagonally. `src/test/kotlin/com/example/arch/HexagonalArchitectureTest.kt` uses [Konsist](https://konsist.lemonappdev.com/) to assert this dependency direction on every `./gradlew test` run, so a layering violation fails CI instead of only showing up in review. See [ARCHITECTURE.md](ARCHITECTURE.md) for the full component map.
+
+## Quick start
+
+1. Open the folder in VS Code and choose Reopen in Container.
+2. Press F5.
+
+This starts:
+
+- a Gradle watcher that recompiles on save,
+- the Ktor server on http://127.0.0.1:8080,
+- a JVM debug session attached on 127.0.0.1:5005.
+
+Use the dev: stop task to fully shut down the watch/server daemons and app JVM.
+
+## Runtime features
+
+The template app exposes these routes:
+
+| Route                           | Description                                                         |
+| ------------------------------- | ------------------------------------------------------------------- |
+| GET /                           | JSON greeting                                                       |
+| GET /info                       | Service name and version (wired via a second, YAML-declared module) |
+| GET /health/live                | Liveness probe                                                      |
+| GET /health/ready               | Readiness probe                                                     |
+| GET /metrics                    | Prometheus scrape output                                            |
+| GET /swagger                    | Swagger UI                                                          |
+| GET /swagger/documentation.yaml | OpenAPI spec                                                        |
+
+## Devcontainer and hot reload
+
+The devcontainer uses the Java 25 image and also enables the desktop-lite feature, which gives the container a real DISPLAY and a browser interface at http://127.0.0.1:6080 (password: vscode).
+
+The F5 workflow runs two Gradle processes side by side:
+
+- gradlew -t classes: recompiles on file save
+- gradlew run -Pdev: starts the app with -Dio.ktor.development=true and opens JDWP on 127.0.0.1:5005
+
+This keeps the app alive across reloads while keeping plain ./gradlew run production-like.
+
+Auto-reload depends on modules being declared by name in src/main/resources/application.yaml, which is how the template is wired.
+
+## Debugging
+
+The template is set up for two attach-based debug flows:
+
+- F5 / Debug Ktor: attaches to the app on port 5005
+- Debug tests: attaches to the test JVM on port 5007
+
+The debug ports are intentionally separate because Gradle --debug-jvm also uses 5005 by default.
+
+## Test suite
+
+The project ships with four test groups:
+
+- unit: in-process Ktor tests using testApplication, plus fast no-Ktor tests of the domain/application layers
+- arch: Konsist tests asserting the hexagonal layer dependency direction (domain -> nothing, application -> domain, adapter -> application/domain)
+- browser: Playwright tests against the running HTTP server, including API and Swagger UI behavior
+
+Run them with:
+
+```bash
+./gradlew test        # unit + arch tests
+./gradlew browserTest # Playwright HTTP and browser tests
 ```
-cd infra/localhost && docker compose down
+
+Behavior of the browser tests:
+
+- if BASE_URL is set, tests hit the already-running app, so app breakpoints still work;
+- otherwise, the test JVM starts its own embedded server and shares the same JVM context for debugging.
+
+The browser suite is separated because Chromium startup is slow and not needed for the normal build.
+
+When DISPLAY is available, the browser test runs headed and can be watched through the noVNC desktop; without DISPLAY it falls back to headless mode automatically.
+
+## Build, packaging, and quality checks
+
+Common commands:
+
+```bash
+./gradlew build             # compile, lint, and run project verification
+./gradlew test              # run unit + arch tests
+./gradlew browserTest       # run Playwright HTTP and browser suite
+./gradlew formatKotlin      # auto-fix ktlint issues
+./gradlew lintKotlin        # lint-only check
+./gradlew run               # plain app run, no dev-mode reload
+./gradlew run -Pdev         # dev-mode run with auto-reload + JDWP
+./gradlew buildFatJar       # fat jar packaging
+./gradlew buildImage         # container image creation via Ktor plugin
+./gradlew koverHtmlReport   # coverage report
 ```
 
-## Development Setup in VS Code
+The repo also includes VS Code tasks for:
 
-### Prerequisites
+- dev
+- dev: watch
+- dev: server
+- dev: stop
+- test: current file
+- test: watch
+- test: open report
+- test: debug
+- format
 
-- [Docker](https://www.docker.com/) (for container-based development)
-- JDK 21
-- VS Code extensions (recommended extensions will be suggested when you open the project):
-  - Kotlin Language (`fwcd.kotlin`)
-  - Kotlin Language (`mathiasfrohlich.kotlin`)
-  - Docker (`ms-azuretools.vscode-docker`)
-  - Gradle for Java (`vscjava.vscode-gradle`)
+## Quality gates and automation
 
-### Running the Application Locally
+- ktlint is used via the Kotlin linter plugin.
+- Kover is configured to exclude browser tests from coverage tasks so normal build/check stays fast.
+- A pre-commit hook runs formatKotlin on staged Kotlin files, re-stages them, and then runs lintKotlin before the commit is accepted.
+- The devcontainer configures core.hooksPath to .githooks automatically.
 
-1. **Run the application:** Press `F5` or go to Run & Debug panel and select `Run Ktor Application`.
-   - This will build and run the application locally.
-   - Open `http://localhost:8080/` in browser.
-2. **Build on change:** Use the task `Ktor Template - Build on change` (Ctrl+Shift+P → Tasks: Run Task).
-3. **Run tests:** Press `Ctrl+Shift+T` or use the task `Ktor Template - Test`.
+## Logging
 
-### Running the Application in a Container
+The app includes two logback profiles:
 
-1. **Start application:** Open the Command Palette (`Ctrl + Shift + P`), type `Run Task`, and select `Ktor Template - Start containers`. 
-   - Container configuration is in `infra/localhost/`.
-   - Open [http://ktor-template.localhost/](http://ktor-template.localhost/) in browser.
-2. **Debugging:** Go to the Run & Debug panel and select `Kotlin Attach (Remote Debug)` to start a remote debugging session.
-3. **Build on change:** Use the task `Ktor Template - Build on change`.
-4. **Stop the containers:** Use the task `Ktor Template - Stop containers`.
+- logback.xml: human-readable console logs and request correlation through CallId and X-Request-Id
+- logback-json.xml: structured JSON output for log aggregation systems
 
-### Available Tasks
+To use JSON logging when running the packaged jar:
 
-All tasks can be run via the Command Palette (`Ctrl+Shift+P` → Tasks: Run Task) or the Terminal menu:
+```bash
+java -Dlogback.configurationFile=logback-json.xml -jar build/libs/ktor-template-all.jar
+```
 
-- **Ktor Template - Build** - Build the application (default build task: `Ctrl+Shift+B`)
-- **Ktor Template - Build on change** - Continuously build on code changes
-- **Ktor Template - Test** - Run tests (default test task)
-- **Ktor Template - Clean** - Clean build artifacts
-- **Ktor Template - Start containers** - Start Docker containers
-- **Ktor Template - Stop containers** - Stop Docker containers
+## License
 
-### Workspace Settings
+Apache License 2.0 — see [LICENSE](LICENSE).
 
-The project includes VS Code workspace settings in `.vscode/settings.json`:
-- Automatic Gradle build configuration updates
-- Hidden build and temporary directories
-- Kotlin language server enabled
-- JVM target set to 21
-- Organize imports on save
+## Summary
+
+This template is designed to feel like a working Ktor service immediately after opening the repo in a devcontainer: the app runs, the debugger is attached, the browser can be watched, and the quality checks are already in place.

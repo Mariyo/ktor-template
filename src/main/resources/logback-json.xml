@@ -1,0 +1,12 @@
+<!-- Opt-in via -Dlogback.configurationFile=logback-json.xml; keeps logback.xml free of a janino dependency. -->
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- MDC entries (e.g. call-id, set by CallLogging) are included as top-level JSON fields automatically. -->
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <logger name="io.netty" level="WARN"/>
+    <logger name="io.micrometer" level="WARN"/>
+</configuration>

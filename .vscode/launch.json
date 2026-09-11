@@ -2,14 +2,27 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "kotlin",
+      // F5 starts the watch build + server via the "dev" task, then attaches.
+      // The debugger survives hot reloads, so you only ever attach once.
+      "type": "intellij_debugger",
       "request": "attach",
-      "name": "Kotlin Attach (Docker-only)",
-      "preLaunchTask": "Ktor Template - Start containers",
+      "name": "Debug Ktor (hot reload)",
       "hostName": "localhost",
       "port": 5005,
-      "timeout": 30000,
-      "projectRoot": "${workspaceFolder}"
+      // Generous: a cold Gradle daemon plus first compile can take a while.
+      "timeout": 120000,
+      "preLaunchTask": "dev"
+    },
+    {
+      // Runs "test: debug" (--debug-jvm, suspended) on the currently open *Test.kt file, then attaches.
+      // Separate port from the app (5005) because Gradle's own --debug-jvm default is 5005 too.
+      "type": "intellij_debugger",
+      "request": "attach",
+      "name": "Debug tests",
+      "hostName": "localhost",
+      "port": 5007,
+      "timeout": 120000,
+      "preLaunchTask": "test: debug"
     }
   ]
 }
