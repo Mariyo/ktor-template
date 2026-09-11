@@ -19,7 +19,6 @@ repositories {
 }
 
 dependencies {
-<<<<<<< HEAD
     implementation(libs.bundles.ktor.server)
     implementation(libs.kotlinx.html.jvm)
     implementation(libs.micrometer.registry.prometheus)
@@ -56,17 +55,6 @@ tasks.named<JavaExec>("run") {
             "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=127.0.0.1:5005",
         )
     }
-=======
-    val ktorVersion = "3.1.1" // Do not upgrade from 3.1.1, it has issues with Hot Reload
-    testImplementation(kotlin("test"))
-    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
-    implementation("io.ktor:ktor-server-core:$ktorVersion")
-    implementation("io.ktor:ktor-server-auth:$ktorVersion")
-    implementation("io.ktor:ktor-server-compression:$ktorVersion")
-    implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("ch.qos.logback:logback-classic:1.6.1")
->>>>>>> main
 }
 
 tasks.test {
