@@ -1,0 +1,116 @@
+openapi: "3.0.3"
+info:
+  title: ktor-template
+  description: Minimal Ktor service template.
+  version: "0.1.0"
+paths:
+  /:
+    get:
+      summary: JSON greeting
+      parameters:
+        - name: name
+          in: query
+          required: false
+          description: Optional name to personalize the greeting. Must be non-blank and at most 100 characters.
+          schema:
+            type: string
+            maxLength: 100
+      responses:
+        "200":
+          description: A greeting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Hello from Ktor!
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /info:
+    get:
+      summary: Service name and version
+      responses:
+        "200":
+          description: Service metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  version:
+                    type: string
+                example:
+                  name: ktor-template
+                  version: "0.1.0"
+  /health/live:
+    get:
+      summary: Liveness probe
+      responses:
+        "200":
+          description: Process is up
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: OK
+  /health/ready:
+    get:
+      summary: Readiness probe
+      responses:
+        "200":
+          description: Process can serve traffic
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: OK
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      responses:
+        "200":
+          description: Metrics in Prometheus text format
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        status:
+          type: integer
+      example:
+        error: Not found
+        status: 404
+  responses:
+    BadRequest:
+      description: Request failed a domain validation rule (e.g. blank or too-long name)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: No route matches the request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    InternalServerError:
+      description: Unhandled server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"

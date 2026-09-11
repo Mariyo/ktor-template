@@ -1,0 +1,15 @@
+ktor:
+  deployment:
+    port: 8080
+    # Gives in-flight requests time to finish before Netty stops accepting/serving.
+    shutdownGracePeriod: 2000
+    shutdownTimeout: 5000
+    # Honoured only in development mode (`-Dio.ktor.development=true`, set by the Gradle `run` task).
+    watch:
+      - build/classes
+      - build/resources
+  application:
+    # Auto-reload requires modules to be referenced by name rather than wired in code.
+    modules:
+      - com.example.adapter.http.ApplicationKt.module
+      - com.example.adapter.http.InfoModuleKt.infoModule

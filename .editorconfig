@@ -1,0 +1,20 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{kt,kts}]
+ktlint_code_style = intellij_idea
+# Allows organized Kotlin imports to use wildcard imports in this project.
+ktlint_standard_no-wildcard-imports = disabled
+
+[*.{json,jsonc,yaml,yml,toml}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false

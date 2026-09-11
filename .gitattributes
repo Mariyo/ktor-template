@@ -1,0 +1,3 @@
+# gradlew must stay LF even when checked out on Windows, or the shell script won't run.
+gradlew text eol=lf
+gradle/wrapper/gradle-wrapper.jar binary

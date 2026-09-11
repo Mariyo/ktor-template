@@ -1,20 +1,110 @@
 {
-  "java.configuration.updateBuildConfiguration": "automatic",
-  "java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-current",
-  "java.import.gradle.java.home": "/usr/lib/jvm/msopenjdk-current",
+  // Ensures every saved file ends with a newline for consistent diffs and POSIX tooling.
+  "files.insertFinalNewline": true,
+  // Removes trailing spaces so formatting noise does not accumulate in changes.
+  "files.trimTrailingWhitespace": true,
+
+  // Keeps generated or cache directories out of the Explorer to reduce visual noise.
   "files.exclude": {
     "**/.gradle": true,
     "**/build": true,
     "**/.kotlin": true
   },
-  "editor.formatOnSave": false,
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit"
+
+  // Gradle continuous build already watches these; letting VS Code watch them too is pure overhead.
+  "files.watcherExclude": {
+    "**/.gradle/**": true,
+    "**/build/**": true,
+    "**/.kotlin": true,
+    "**/.kotlin/**": true
   },
-  "java.debug.settings.onBuildFailureProceed": true,
-  "github.copilot.chat.commitMessageGeneration.instructions": [
-    {
-      "text": "Use conventional commit message format."
+
+  // Keeps generated directories out of search results so searches focus on source files.
+  "search.exclude": {
+    "**/.gradle": true,
+    "**/build": true,
+    "**/.kotlin": true
+  },
+
+  // Keeps the Debug Console closed when a debug session starts unless opened deliberately.
+  "debug.internalConsoleOptions": "neverOpen",
+  // Prevents VS Code from repeatedly asking whether shell tasks should use problem matchers.
+  "task.problemMatchers.neverPrompt": {
+    // Applies that no-prompt behavior to shell tasks used by this Gradle project.
+    "shell": true
+  },
+  // Left disabled: any value here (tried 3 different phrasings, including plain prose with no
+  // template syntax) made Copilot's "Generate Commit Message" fail with 422 promptFiltered every
+  // time; empty/disabled is the only state that works. Looks like a bug in this (Experimental)
+  // setting itself, not the wording. Revisit later; conventions live in AGENTS.md in the meantime.
+  // "github.copilot.chat.commitMessageGeneration.instructions": [
+  //   {
+  //     "text": "Write commit messages in Conventional Commits style"
+  //   }
+  // ],
+  // Lets the Java extension report possible nullability problems automatically.
+  "java.compile.nullAnalysis.mode": "automatic",
+  // formatOnSave alone only had an effect on Kotlin; these give the other file types a formatter.
+  // Uses the Prettier extension for consistent Markdown formatting.
+  "[markdown]": {
+    // Selects Prettier as the formatter whenever a Markdown file is active.
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Uses the Prettier extension for consistent YAML formatting.
+  "[yaml]": {
+    // Selects Prettier as the formatter whenever a YAML file is active.
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Uses the Prettier extension for JSON and JSONC, including this settings file.
+  "[json][jsonc]": {
+    // Selects Prettier as the formatter for JSON-based files.
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Uses TOML-aware formatting for Gradle's version catalog.
+  "[toml]": {
+    // Selects Even Better TOML as the formatter for TOML files.
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+
+  // Keeps Kotlin formatting aligned with the project's four-space convention.
+  "[kotlin]": {
+    // Formats Kotlin files automatically when they are saved.
+    "editor.formatOnSave": true,
+    // Uses spaces instead of tab characters for Kotlin indentation.
+    "editor.insertSpaces": true,
+    // Sets Kotlin indentation to four spaces to match the project style.
+    "editor.tabSize": 4,
+    // Organizes Kotlin imports when the file is explicitly saved with Ctrl+S.
+    "editor.codeActionsOnSave": {
+      // The Kotlin code style in .editorconfig keeps the organized imports explicit.
+      "source.organizeImports": "explicit"
     }
-  ]
+  },
+
+  // Makes nested folders easier to distinguish in the Explorer.
+  "workbench.tree.indent": 24,
+  // Shows indentation guides in tree views so folder nesting is easier to scan.
+  "workbench.tree.renderIndentGuides": "always",
+  // Formats supported files automatically before they are saved.
+  "editor.formatOnSave": true,
+  // Formats pasted code so it matches the surrounding file style.
+  "editor.formatOnPaste": true,
+  // Removes automatically inserted whitespace at the end of indented blank lines.
+  "editor.trimAutoWhitespace": true,
+  // Hides the minimap to leave more horizontal space for code.
+  "editor.minimap.enabled": false,
+  // Keeps the current scope or heading visible while scrolling through long files.
+  "editor.stickyScroll.enabled": true,
+  // Gives matching brackets distinct colors to make nesting easier to follow.
+  "editor.bracketPairColorization.enabled": true,
+  // Draws guides between matching bracket pairs to clarify larger expressions.
+  "editor.guides.bracketPairs": true,
+  // Shows inferred types and parameter names when the Kotlin language server supports them.
+  "editor.inlayHints.enabled": "on",
+  // Preserves indentation when pressing Enter inside Kotlin blocks.
+  "editor.autoIndent": "full",
+  // Retains more terminal history so longer Gradle output remains available.
+  "terminal.integrated.scrollback": 10000,
+  // Checks remote branches periodically so branch status stays current.
+  "git.autofetch": true
 }

@@ -1,14 +1,24 @@
+// Auto-installed by the devcontainer; listed here for anyone opening the repo without one.
 {
   "recommendations": [
-    "ms-vscode-remote.remote-containers",
     "JetBrains.kotlin-server",
-    "vscjava.vscode-gradle",
-    "redhat.java",
-    "vscjava.vscode-java-debug"
+    "EditorConfig.EditorConfig",
+    "iulian-radu-at.vscode-tasks-sidebar",
+    "esbenp.prettier-vscode",
+    "tamasfe.even-better-toml",
+    "usernamehw.errorlens",
+    "redhat.vscode-yaml",
+    "github.vscode-github-actions"
   ],
-  // Both register the `kotlin` language and hijack breakpoints from JetBrains.kotlin-server.
+  // Duplicates Kotlin LSP's own Gradle project import; tried it once, cost ~2GB+ RAM for nothing.
   "unwantedRecommendations": [
-    "mathiasfrohlich.kotlin",
-    "fwcd.kotlin"
+    "vscjava.vscode-gradle",
+    "vscjava.vscode-java-pack",
+    "redhat.java",
+    "vscjava.vscode-java-test",
+    "vscjava.vscode-java-debug",
+    "vscjava.vscode-java-dependency",
+    "vscjava.vscode-maven",
+    "dbaeumer.vscode-eslint"
   ]
 }

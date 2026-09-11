@@ -1,47 +1,47 @@
 {
-  "name": "ktor-template-dev",
-  "image": "mcr.microsoft.com/devcontainers/java:21-trixie",
+  "name": "Ktor (JDK 25)",
+  "image": "mcr.microsoft.com/devcontainers/java:25-bookworm",
   "features": {
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
-      "moby": false
-    }
+    // Fluxbox + noVNC on :6080; sets DISPLAY itself so Playwright can run headed.
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
   },
-  "appPort": [
-    "80:8080"
-  ],
-  "containerEnv": {
-    "APP_ENV": "DEVELOPMENT"
+  // Chromium needs more shared memory than Docker's tiny default or it crashes/OOMs.
+  "runArgs": ["--ipc=host"],
+  "forwardPorts": [8080, 5005, 5007, 6080],
+  "portsAttributes": {
+    "8080": { "label": "Ktor HTTP", "onAutoForward": "notify" },
+    "5005": { "label": "JVM debug (JDWP)", "onAutoForward": "silent" },
+    "5007": { "label": "JVM debug (tests)", "onAutoForward": "silent" },
+    "6080": { "label": "Browser (noVNC)", "onAutoForward": "silent" }
   },
   "mounts": [
-    "source=ktor-template-gradle-cache,target=/home/vscode/.gradle,type=volume"
+    // Persists the Gradle distribution and dependency cache across container rebuilds.
+    "source=${localWorkspaceFolderBasename}-gradle,target=/home/vscode/.gradle,type=volume",
+    // Persists the downloaded Chromium binary so rebuilds don't re-fetch it.
+    "source=${localWorkspaceFolderBasename}-playwright,target=/home/vscode/.cache/ms-playwright,type=volume"
   ],
-  "forwardPorts": [8080, 5005],
-  "portsAttributes": {
-    "8080": {
-      "label": "Ktor HTTP",
-      "onAutoForward": "notify"
-    },
-    "5005": {
-      "label": "Kotlin Debug"
-    }
-  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
-        "vscjava.vscode-gradle",
-        "vscjava.vscode-java-debug",
-        "redhat.java",
-        "ms-azuretools.vscode-docker",
-        "Upstash.context7-mcp",
         "JetBrains.kotlin-server",
-        "yzhang.markdown-all-in-one",
-        "ms-azuretools.vscode-containers",
-        "cweijan.vscode-database-client2",
-        "docker.docker",
+        "EditorConfig.EditorConfig",
         "iulian-radu-at.vscode-tasks-sidebar",
-        "redhat.vscode-yaml"
-      ]
+        "esbenp.prettier-vscode",
+        "tamasfe.even-better-toml",
+        "usernamehw.errorlens",
+        "redhat.vscode-yaml",
+        "github.vscode-github-actions",
+        "Upstash.context7-mcp",
+        "ms-azuretools.vscode-containers",
+        "ms-azuretools.vscode-docker",
+        "ImmanuelTikhonov.droast"
+      ],
+      "settings": {
+        // This image's Java lives here, not at the SDKMAN path some machine-level settings assume.
+        "java.import.gradle.java.home": "/usr/lib/jvm/msopenjdk-current"
+      }
     }
   },
-  "postCreateCommand": "sudo chown -R vscode:vscode /home/vscode/.gradle && ./gradlew --version"
+  "remoteUser": "vscode"
 }

@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      # Also validates the wrapper JAR by default; no separate wrapper-validation step needed.
+      - uses: gradle/actions/setup-gradle@v6
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+
+      # lintKotlin already runs as part of check -> build; no need to invoke it separately.
+      - run: ./gradlew build koverHtmlReport
+
+      - name: Fat jar smoke test
+        run: |
+          ./gradlew buildFatJar
+          java -jar build/libs/ktor-template-all.jar &
+          APP_PID=$!
+          for _ in $(seq 1 20); do
+            if curl -sf http://localhost:8080/health/live; then
+              kill "$APP_PID"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Fat jar never became healthy" >&2
+          kill "$APP_PID"
+          exit 1
+
+      - run: ./gradlew playwrightInstall browserTest
+
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: build/reports/
+
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: build/reports/kover/
