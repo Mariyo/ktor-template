@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.4.20"
-ktor = "3.5.2"
+ktor = "3.6.0"
 kotlinter = "5.7.0"
 logback = "1.6.3"
 micrometer = "1.17.1"
