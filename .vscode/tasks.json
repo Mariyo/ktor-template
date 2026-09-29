@@ -12,7 +12,7 @@
     {
       "label": "dev: watch",
       "type": "shell",
-      "command": "./gradlew --console=plain --project-cache-dir=.gradle/watch -t classes",
+      "command": "JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew --console=plain --project-cache-dir=.gradle/watch -t classes",
       "isBackground": true,
       "runOptions": { "instanceLimit": 1 },
       "presentation": {
@@ -42,7 +42,7 @@
       // -Pdev turns on Ktor auto-reload and JDWP; without it this is what plain `./gradlew run` does.
       "label": "dev: server",
       "type": "shell",
-      "command": "./gradlew --console=plain --project-cache-dir=.gradle/run run -Pdev",
+      "command": "JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew --console=plain --project-cache-dir=.gradle/run run -Pdev",
       "isBackground": true,
       "runOptions": { "instanceLimit": 1 },
       "presentation": {
@@ -63,13 +63,13 @@
       // Stops only the two dev-loop daemons (matched by cache dir), not the one Kotlin LSP's Gradle import uses.
       "label": "dev: stop",
       "type": "shell",
-      "command": "pkill -f 'project-cache-dir=.gradle/(watch|run)' || true; pkill -f 'Dio.ktor.development=true' || true; ./gradlew --project-cache-dir=.gradle/watch --stop; ./gradlew --project-cache-dir=.gradle/run --stop; echo 'Dev environment stopped.'",
+      "command": "pkill -f 'project-cache-dir=.gradle/(watch|run)' || true; pkill -f 'Dio.ktor.development=true' || true; JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew --project-cache-dir=.gradle/watch --stop; JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew --project-cache-dir=.gradle/run --stop; echo 'Dev environment stopped.'",
       "problemMatcher": []
     },
     {
       "label": "build",
       "type": "shell",
-      "command": "./gradlew build",
+      "command": "JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew build",
       "group": { "kind": "build", "isDefault": true },
       "problemMatcher": [
         {
@@ -101,7 +101,7 @@
     {
       "label": "test",
       "type": "shell",
-      "command": "./gradlew test",
+      "command": "JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew test",
       "group": { "kind": "test", "isDefault": true },
       "problemMatcher": [
         {
@@ -134,7 +134,7 @@
       // ${fileBasenameNoExtension} only makes sense with a *Test.kt file focused in the editor.
       "label": "test: current file",
       "type": "shell",
-      "command": "./gradlew test --tests \"*.${fileBasenameNoExtension}\"",
+      "command": "JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew test --tests \"*.${fileBasenameNoExtension}\"",
       "problemMatcher": [
         {
           "owner": "kotlin",
@@ -153,7 +153,7 @@
     {
       "label": "test: watch",
       "type": "shell",
-      "command": "./gradlew --console=plain -t test",
+      "command": "JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew --console=plain -t test",
       "isBackground": true,
       "runOptions": { "instanceLimit": 1 },
       "problemMatcher": {
@@ -177,14 +177,14 @@
       // files.exclude hides build/, so opening the HTML report needs its own task; $BROWSER is VS Code's forwarding shim.
       "label": "test: open report",
       "type": "shell",
-      "command": "./gradlew test --continue; \"$BROWSER\" build/reports/tests/test/index.html",
+      "command": "JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew test --continue; \"$BROWSER\" build/reports/tests/test/index.html",
       "problemMatcher": []
     },
     {
       // --debug-jvm suspends the test JVM until a debugger attaches on port 5007 (see build.gradle.kts).
       "label": "test: debug",
       "type": "shell",
-      "command": "./gradlew --console=plain --debug-jvm test --tests \"*.${fileBasenameNoExtension}\"",
+      "command": "JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew --console=plain --debug-jvm test --tests \"*.${fileBasenameNoExtension}\"",
       "isBackground": true,
       "presentation": {
         "panel": "dedicated",
@@ -202,7 +202,7 @@
     {
       "label": "format",
       "type": "shell",
-      "command": "./gradlew formatKotlin",
+      "command": "JAVA_HOME=/usr/lib/jvm/msopenjdk-current ./gradlew formatKotlin",
       "problemMatcher": []
     }
   ]

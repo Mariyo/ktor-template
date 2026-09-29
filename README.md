@@ -61,6 +61,8 @@ The F5 workflow runs two Gradle processes side by side:
 
 This keeps the app alive across reloads while keeping plain ./gradlew run production-like.
 
+VS Code Gradle tasks set `JAVA_HOME` to the container's JDK at `/usr/lib/jvm/msopenjdk-current`. This overrides host-specific Java paths that extensions may inject into task terminals. If a manual terminal has an invalid `JAVA_HOME`, run `export JAVA_HOME=/usr/lib/jvm/msopenjdk-current` before `./gradlew`.
+
 Auto-reload depends on modules being declared by name in src/main/resources/application.yaml, which is how the template is wired.
 
 ## Debugging
