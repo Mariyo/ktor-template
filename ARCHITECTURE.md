@@ -17,7 +17,7 @@ they talk to each other.
 | **VS Code tasks**               | `.vscode/tasks.json`                                                                              | Wraps Gradle invocations as named, chainable, backgroundable commands                                                                                                                                                             |
 | **VS Code launch configs**      | `.vscode/launch.json`                                                                             | Attaches the JVM debugger to a task's JDWP port instead of launching the JVM itself                                                                                                                                               |
 | **unit / arch / browser tests** | `src/test/kotlin/com/example/unit/*`, `.../arch/*`, `.../browser/*`                               | In-process and Konsist architecture tests run with `test`; Playwright HTTP and browser scenarios run with `browserTest`                                                                                                           |
-| **Pre-commit hook**             | `.githooks/pre-commit`                                                                            | Auto-formats staged Kotlin with `formatKotlin`, then blocks commits that still fail `lintKotlin`                                                                                                                                  |
+| **Pre-commit hook**             | `.githooks/pre-commit`                                                                            | Auto-formats staged Kotlin with `formatKotlin`, then blocks commits that still fail `lintKotlin` or the unit/arch `test` suite                                                                                                    |
 | **CI**                          | `.github/workflows/ci.yml`                                                                        | Same checks as local, plus a packaged-jar smoke test, on every push/PR                                                                                                                                                            |
 
 ## Component map
@@ -174,7 +174,7 @@ with the app JVM's debug port from the previous use case.
 
 ## Use case: black-box (e2e) tests + the live browser view
 
-Playwright HTTP and browser e2e tests run separately with `browserTest`.
+Playwright HTTP and browser e2e tests run separately with `browserTest` and
 target either the already-running F5 dev server or a server started in the test JVM, decided by
 `BASE_URL`.
 
@@ -191,13 +191,15 @@ sequenceDiagram
     participant DevServer as F5 dev server (:8080, if running)
 
     Dev->>Gradle: ./gradlew browserTest
+    Gradle->>Gradle: playwrightInstall (Chromium download only, no sudo)
     Gradle->>TestJVM: fork (test source set, com/example/browser/** only)
 
     alt BASE_URL is set
         TestJVM->>DevServer: HTTP requests go here instead
         Note over TestJVM,DevServer: App breakpoints on :5005 still work
     else BASE_URL unset (default)
-        TestJVM->>Embedded: embeddedServer(Netty, port=0){ module() }.start()
+        TestJVM->>Embedded: EngineMain.createServer(-port=0).start()
+        Note over TestJVM,Embedded: Booted from application.yaml, so the YAML module list is exercised
         Embedded-->>TestJVM: resolvedConnectors().first().port
         Note over TestJVM,Embedded: Same JVM as the test -\ntest and app breakpoints share one session
     end
@@ -219,8 +221,8 @@ sequenceDiagram
     TestJVM->>Embedded: shutdown hook stops the embedded server (if used)
 ```
 
-If a headed launch fails (stale `DISPLAY`, desktop not up yet), `SwaggerUiBrowserTest` catches
-it and retries headless rather than failing the whole test.
+If a headed launch fails (stale `DISPLAY`, desktop not up yet), `AbstractBrowserTest`
+retries with fresh headless launch options rather than failing the whole test.
 
 ## Use case: CI pipeline
 
@@ -263,15 +265,22 @@ sequenceDiagram
     Git->>Hook: core.hooksPath → run pre-commit
     Hook->>Gradle: gradlew --quiet formatKotlin
     Gradle-->>Hook: staged files reformatted on disk
-    Hook->>Git: git add (re-stage originally staged files)
+    Hook->>Git: git add (re-stage originally staged files, except ones with unstaged changes)
     Hook->>Gradle: gradlew --quiet lintKotlin
     alt lint still fails
         Gradle-->>Hook: non-zero exit
         Hook-->>Dev: fix remaining issues manually + abort
     else lint passes
         Gradle-->>Hook: success
-        Hook-->>Git: exit 0
-        Git->>Git: commit created (with auto-formatted changes)
+        Hook->>Gradle: gradlew --quiet test (unit + arch)
+        alt tests fail
+            Gradle-->>Hook: non-zero exit
+            Hook-->>Dev: summary first, then Gradle output + abort
+        else tests pass
+            Gradle-->>Hook: success
+            Hook-->>Git: exit 0
+            Git->>Git: commit created (with auto-formatted changes)
+        end
     end
 ```
 
@@ -282,7 +291,7 @@ opens the devcontainer — no separate hook manager dependency.
 
 - **Attach, don't launch**: both debugger configs attach to a JDWP port opened by a Gradle
   task, so the debugger session outlives hot reloads and test re-runs.
-- **Three separate debug ports** (5005 app, 5007 tests) and **three Gradle cache dirs**
+- **Two separate debug ports** (5005 app, 5007 tests) and **three Gradle cache dirs**
   (default, `.gradle/watch`, `.gradle/run`) exist purely to stop the dev loop, the test
   runner, and the Kotlin LSP's own project import from fighting each other over the same
   lock or port.
@@ -290,7 +299,7 @@ opens the devcontainer — no separate hook manager dependency.
   `com/example/browser/**`, `browserTest` includes only it) — kept off `check`/`build` so a
   normal build never needs a browser.
 - **No database, no Testcontainers**: this template intentionally stays infrastructure-free;
-  add a `Fixtures` seam (see `AGENTS.md`) before adding either.
+  add a shared test-fixture seam before adding either.
 - **Hexagonal layering is enforced by a test, not just convention**: `HexagonalArchitectureTest`
   (Konsist) fails the build if `domain`/`application` ever import Ktor or an outer layer, so the
   boundary survives contributors who haven't read this document.

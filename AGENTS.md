@@ -22,6 +22,6 @@
   new/changed HTTP route must be added to `src/main/resources/openapi/documentation.yaml`.
 - Never run `git commit` on the user's behalf. Stage or prepare changes if useful, but leave
   the actual commit to the user.
-- use Accepatance Test Driven Development when doing changes in `src`. Work iteratively,
-  create test, verify it with human developer and after approval implement/refactor
-  agains the test.
+- Use Acceptance Test Driven Development when making changes in `src`. Work iteratively:
+  create a test, verify it with the human developer, and after approval implement/refactor
+  against the test.

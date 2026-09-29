@@ -50,6 +50,8 @@ The template app exposes these routes:
 | GET /swagger                    | Swagger UI                                                          |
 | GET /swagger/documentation.yaml | OpenAPI spec                                                        |
 
+Errors are returned as JSON `{"error": ..., "status": ...}`. Domain rule violations (`DomainValidationException`), malformed requests and missing resources map to 400/404; anything unexpected is logged and returned as a generic 500 without its message.
+
 ## Devcontainer and hot reload
 
 The devcontainer uses the Java 25 image and also enables the desktop-lite feature, which gives the container a real DISPLAY and a browser interface at http://127.0.0.1:6080 (password: vscode).
@@ -106,13 +108,13 @@ Common commands:
 ./gradlew build             # compile, lint, and run project verification
 ./gradlew test              # run unit + arch tests
 ./gradlew browserTest       # run Playwright HTTP and browser suite (downloads Chromium if missing, no sudo)
-./gradlew playwrightInstallWithDeps # Chromium + OS libraries via apt (needs sudo; devcontainer/CI only)
+./gradlew playwrightInstallWithDeps  # Chromium + OS libraries via apt (needs sudo; devcontainer/CI only)
 ./gradlew formatKotlin      # auto-fix ktlint issues
 ./gradlew lintKotlin        # lint-only check
 ./gradlew run               # plain app run, no dev-mode reload
 ./gradlew run -Pdev         # dev-mode run with auto-reload + JDWP
 ./gradlew buildFatJar       # fat jar packaging
-./gradlew buildImage         # container image creation via Ktor plugin
+./gradlew buildImage        # container image creation via Ktor plugin (needs a Docker daemon)
 ./gradlew koverHtmlReport   # coverage report
 ```
 
@@ -122,6 +124,8 @@ The repo also includes VS Code tasks for:
 - dev: watch
 - dev: server
 - dev: stop
+- build
+- test
 - test: current file
 - test: watch
 - test: open report
@@ -134,6 +138,7 @@ The repo also includes VS Code tasks for:
 - Kover is configured to exclude browser tests from coverage tasks so normal build/check stays fast.
 - A pre-commit hook runs formatKotlin, re-stages the fixed files (except ones with unstaged changes, which get a warning), then runs lintKotlin and the unit/arch tests before the commit is accepted.
 - The devcontainer configures core.hooksPath to .githooks automatically.
+- CI (.github/workflows/ci.yml) runs build, Kover, a fat-jar smoke test and browserTest on pushes to main and PRs; Dependabot keeps Gradle, GitHub Actions and devcontainer versions current.
 
 ## Logging
 
