@@ -97,7 +97,7 @@ components:
         status: 404
   responses:
     BadRequest:
-      description: Request failed a domain validation rule (e.g. blank or too-long name)
+      description: Request was malformed or failed a domain validation rule (e.g. blank or too-long name)
       content:
         application/json:
           schema:

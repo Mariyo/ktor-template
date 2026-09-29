@@ -75,12 +75,15 @@ on every `test` run rather than left as unchecked convention:
 ```mermaid
 flowchart LR
     Adapter["adapter.http\n(Ktor routes, plugins, wire DTOs)"] --> Application["application\n(use cases: GreetingService, ServiceInfoService)"]
-    Application --> Domain["domain\n(value objects: Greeting, ServiceInfo)"]
+    Application --> Domain["domain\n(value objects: Greeting, ServiceInfo;\nDomainValidationException)"]
 ```
 
 - **`domain`** — plain data classes with zero framework imports (no `@Serializable`, no Ktor).
   This is the DDD tactical layer: today just small value objects, but it's where
   entities/aggregates/domain events would live if the template grew real business rules.
+  Invariant violations throw `DomainValidationException`; `adapter.http` maps only that type
+  (plus Ktor's `BadRequestException`/`NotFoundException`) to 400/404, and everything else to a
+  generic 500 so internal messages never reach the client.
 - **`application`** — use case classes that orchestrate the domain. Also framework-free; an
   adapter (HTTP today, a CLI or message consumer tomorrow) calls into these, never the other
   way round.
@@ -112,7 +115,7 @@ sequenceDiagram
     PC->>Gradle: classes testClasses (default cache dir)
     PC->>Gradle: classes (--project-cache-dir=.gradle/watch)
     PC->>Gradle: classes (--project-cache-dir=.gradle/run)
-    PC->>Gradle: playwrightInstall (Chromium + apt deps, --with-deps)
+    PC->>Gradle: playwrightInstallWithDeps (Chromium + apt deps, --with-deps)
     PC-->>VSC: postCreateCommand done
     VSC->>VSC: install extensions (Kotlin LSP, Prettier, ...)
     VSC->>Gradle: Kotlin LSP imports project (its own daemon)
@@ -240,7 +243,7 @@ sequenceDiagram
         CI->>Jar: curl /health/live
     end
     Jar-->>CI: 200 OK → kill jar, continue
-    CI->>Gradle: playwrightInstall browserTest (headless, no DISPLAY)
+    CI->>Gradle: playwrightInstallWithDeps browserTest (headless, no DISPLAY)
     alt any step failed
         CI->>GH: upload test-reports artifact
     end

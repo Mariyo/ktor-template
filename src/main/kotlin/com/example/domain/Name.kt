@@ -4,8 +4,8 @@ package com.example.domain
 data class Name(val value: String) {
     init {
         // Domain invariant: whoever we greet must have an actual, reasonably-sized name.
-        require(value.isNotBlank()) { "Name must not be blank" }
-        require(value.length <= MAX_LENGTH) { "Name must not exceed $MAX_LENGTH characters" }
+        if (value.isBlank()) throw DomainValidationException("Name must not be blank")
+        if (value.length > MAX_LENGTH) throw DomainValidationException("Name must not exceed $MAX_LENGTH characters")
     }
 
     companion object {

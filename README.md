@@ -4,9 +4,9 @@ Minimal Ktor service template for VS Code devcontainers: instant startup, hot re
 
 | Component | Version       |
 | --------- | ------------- |
-| Kotlin    | 2.4.10        |
-| Ktor      | 3.5.2 (Netty) |
-| Gradle    | 9.7.1         |
+| Kotlin    | 2.4.20        |
+| Ktor      | 3.6.0 (Netty) |
+| Gradle    | 9.8.0         |
 | JDK       | 25            |
 
 ## What is included
@@ -76,7 +76,7 @@ The debug ports are intentionally separate because Gradle --debug-jvm also uses 
 
 ## Test suite
 
-The project ships with four test groups:
+The project ships with three test groups:
 
 - unit: in-process Ktor tests using testApplication, plus fast no-Ktor tests of the domain/application layers
 - arch: Konsist tests asserting the hexagonal layer dependency direction (domain -> nothing, application -> domain, adapter -> application/domain)
@@ -105,7 +105,8 @@ Common commands:
 ```bash
 ./gradlew build             # compile, lint, and run project verification
 ./gradlew test              # run unit + arch tests
-./gradlew browserTest       # run Playwright HTTP and browser suite
+./gradlew browserTest       # run Playwright HTTP and browser suite (downloads Chromium if missing, no sudo)
+./gradlew playwrightInstallWithDeps # Chromium + OS libraries via apt (needs sudo; devcontainer/CI only)
 ./gradlew formatKotlin      # auto-fix ktlint issues
 ./gradlew lintKotlin        # lint-only check
 ./gradlew run               # plain app run, no dev-mode reload
@@ -131,7 +132,7 @@ The repo also includes VS Code tasks for:
 
 - ktlint is used via the Kotlin linter plugin.
 - Kover is configured to exclude browser tests from coverage tasks so normal build/check stays fast.
-- A pre-commit hook runs formatKotlin on staged Kotlin files, re-stages them, and then runs lintKotlin before the commit is accepted.
+- A pre-commit hook runs formatKotlin, re-stages the fixed files (except ones with unstaged changes, which get a warning), then runs lintKotlin and the unit/arch tests before the commit is accepted.
 - The devcontainer configures core.hooksPath to .githooks automatically.
 
 ## Logging

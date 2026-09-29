@@ -1,24 +1,41 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Snapshot before formatting touches anything, so only originally staged files get re-added.
-staged_files="$(git diff --cached --name-only --diff-filter=ACM -- '*.kt' '*.kts')"
+# VS Code's commit dialog shows only the first output line, so on failure the summary must come before Gradle's output.
+run_gradle() {
+    local failure_message="$1"
+    shift
+    local output
+    if ! output="$(./gradlew --quiet "$@" 2>&1)"; then
+        echo "$failure_message" >&2
+        echo "$output" >&2
+        exit 1
+    fi
+}
 
-./gradlew --quiet formatKotlin
+# Snapshot before formatting touches anything, so only originally staged files get re-added.
+mapfile -t staged_files < <(git diff --cached --name-only --diff-filter=ACM -- '*.kt' '*.kts')
+# Re-adding a partially staged file would also stage its unstaged hunks.
+mapfile -t partial_files < <(git diff --name-only -- '*.kt' '*.kts')
+
+run_gradle "formatKotlin failed; see the output below." formatKotlin
+
+restage=()
+for file in "${staged_files[@]}"; do
+    if printf '%s\n' "${partial_files[@]}" | grep -qxF -- "$file"; then
+        echo "warning: $file has unstaged changes; ktlint fixes were not staged." >&2
+    else
+        restage+=("$file")
+    fi
+done
 
 # Pick up ktlint's fixes without pulling in unrelated working-tree changes.
-if [[ -n "$staged_files" ]]; then
-    git add -- $staged_files
+if [[ ${#restage[@]} -gt 0 ]]; then
+    git add -- "${restage[@]}"
 fi
 
 # Catches whatever formatKotlin can't auto-fix; the same check runs again in CI as the source of truth.
-if ! ./gradlew --quiet lintKotlin; then
-    echo "lintKotlin failed after auto-format; fix the remaining issues manually, then re-stage and commit." >&2
-    exit 1
-fi
+run_gradle "lintKotlin failed after auto-format; fix the remaining issues manually, then re-stage and commit." lintKotlin
 
 # Only the fast in-process suite runs here; server/browser tests stay in CI so commits aren't blocked on slow HTTP/browser startup.
-if ! ./gradlew --quiet test; then
-    echo "Unit tests failed; fix them, then re-stage and commit." >&2
-    exit 1
-fi
+run_gradle "Unit tests failed; fix them, then re-stage and commit." test

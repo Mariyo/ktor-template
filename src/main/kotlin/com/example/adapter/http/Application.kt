@@ -1,12 +1,14 @@
 package com.example.adapter.http
 
 import com.example.application.GreetingService
+import com.example.domain.DomainValidationException
 import com.example.domain.Name
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.metrics.micrometer.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.*
 import io.ktor.server.plugins.callid.*
 import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.plugins.compression.*
@@ -63,12 +65,25 @@ fun Application.module() {
         }
     }
     install(StatusPages) {
-        // Domain invariants (e.g. Name) surface as IllegalArgumentException; that's a client
-        // mistake (400), distinct from the catch-all 500 below for genuinely unexpected failures.
-        exception<IllegalArgumentException> { call, cause ->
+        // Only domain rule violations are safe to echo and blame on the client; a stray
+        // IllegalArgumentException from elsewhere is a bug and falls through to the 500 below.
+        exception<DomainValidationException> { call, cause ->
             call.respond(
                 HttpStatusCode.BadRequest,
                 ErrorResponse(cause.message ?: "Invalid request", HttpStatusCode.BadRequest.value),
+            )
+        }
+        // Ktor throws these for malformed input/missing resources; the catch-all below would turn them into 500s.
+        exception<BadRequestException> { call, _ ->
+            call.respond(
+                HttpStatusCode.BadRequest,
+                ErrorResponse("Bad request", HttpStatusCode.BadRequest.value),
+            )
+        }
+        exception<NotFoundException> { call, _ ->
+            call.respond(
+                HttpStatusCode.NotFound,
+                ErrorResponse("Not found", HttpStatusCode.NotFound.value),
             )
         }
         // Without this, dev mode returns the raw stacktrace to the client instead of just logging it.

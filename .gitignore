@@ -2,6 +2,9 @@
 build/
 !gradle/wrapper/gradle-wrapper.jar
 *.log
+var/
+.idea/
+*.iml
 .DS_Store
 .kotlin
 # Eclipse JDT's default output dir (redhat.java); Gradle's own output is build/.

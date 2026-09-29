@@ -32,21 +32,23 @@ abstract class AbstractBrowserTest {
     }
 
     private fun launchBrowser(playwright: Playwright, headed: Boolean): Browser {
-        val launchOptions = BrowserType.LaunchOptions().setArgs(containerArgs)
         if (headed && !System.getenv("DISPLAY").isNullOrBlank()) {
             return try {
                 playwright.chromium().launch(
-                    launchOptions
+                    launchOptions()
                         .setHeadless(false)
                         .setSlowMo(250.0),
                 )
             } catch (e: Exception) {
                 System.err.println("Headed launch failed (${e.message}), falling back to headless.")
-                playwright.chromium().launch(launchOptions.setHeadless(true))
+                playwright.chromium().launch(launchOptions().setHeadless(true))
             }
         }
-        return playwright.chromium().launch(launchOptions.setHeadless(true))
+        return playwright.chromium().launch(launchOptions().setHeadless(true))
     }
+
+    // Fresh instance per launch: the setters mutate, so a shared one would carry slowMo into the headless fallback.
+    private fun launchOptions() = BrowserType.LaunchOptions().setArgs(containerArgs)
 
     private companion object {
         val containerArgs = listOf("--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu")

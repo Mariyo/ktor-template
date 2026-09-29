@@ -4,6 +4,6 @@ package com.example.domain
 data class Greeting(val message: String) {
     init {
         // Domain invariant: a blank greeting is not a valid greeting, regardless of caller (HTTP, test, ...).
-        require(message.isNotBlank()) { "Greeting message must not be blank" }
+        if (message.isBlank()) throw DomainValidationException("Greeting message must not be blank")
     }
 }

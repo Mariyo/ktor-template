@@ -61,6 +61,8 @@ tasks.test {
     useJUnitPlatform()
     // Browser tests are kept out of the normal suite because Chromium is an environment-level dependency.
     exclude("com/example/browser/**")
+    // JDK 24+ warns on stderr when a native lib loads; VS Code's commit dialog shows only that first line, hiding real failures.
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
     // Full stacktraces and pass/fail/skip events; Gradle's default output is nearly silent.
     testLogging {
         events("passed", "skipped", "failed")
@@ -87,9 +89,18 @@ tasks.register<Test>("browserTest") {
     shouldRunAfter(tasks.test)
 }
 
-// Idempotent: downloads the Chromium binary + OS deps into the cache volume mounted in devcontainer.json.
+// Idempotent: downloads only the Chromium binary into the cache volume mounted in devcontainer.json.
 tasks.register<JavaExec>("playwrightInstall") {
-    description = "Downloads the Playwright Chromium browser and its OS-level dependencies."
+    description = "Downloads the Playwright Chromium browser."
+    group = "verification"
+    classpath = sourceSets.test.get().runtimeClasspath
+    mainClass = "com.microsoft.playwright.CLI"
+    args("install", "chromium")
+}
+
+// Separate from playwrightInstall because --with-deps runs sudo apt-get, which browserTest must not need.
+tasks.register<JavaExec>("playwrightInstallWithDeps") {
+    description = "Downloads Playwright Chromium plus its OS-level dependencies (needs sudo)."
     group = "verification"
     classpath = sourceSets.test.get().runtimeClasspath
     mainClass = "com.microsoft.playwright.CLI"
