@@ -2,7 +2,7 @@
 kotlin = "2.4.20"
 ktor = "3.6.0"
 kotlinter = "5.7.0"
-logback = "1.6.3"
+logback = "1.6.4"
 micrometer = "1.17.1"
 kover = "0.9.9"
 logstash-logback-encoder = "9.0"
