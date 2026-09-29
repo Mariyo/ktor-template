@@ -44,6 +44,18 @@
   // ],
   // Lets the Java extension report possible nullability problems automatically.
   "java.compile.nullAnalysis.mode": "automatic",
+  // Overrides host-level Java runtime mappings with the dev container's actual JDK.
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-25",
+      "path": "/usr/lib/jvm/msopenjdk-current",
+      "default": true
+    }
+  ],
+  // Keeps Gradle import aligned with the container JDK.
+  "java.import.gradle.java.home": "/usr/lib/jvm/msopenjdk-current",
+  // Ensures the Java language server launches on the same runtime.
+  "java.jdt.ls.java.home": "/usr/lib/jvm/msopenjdk-current",
   // formatOnSave alone only had an effect on Kotlin; these give the other file types a formatter.
   // Uses the Prettier extension for consistent Markdown formatting.
   "[markdown]": {
