@@ -38,7 +38,9 @@
     // Persists the Gradle distribution and dependency cache across container rebuilds.
     "source=${localWorkspaceFolderBasename}-gradle,target=/home/vscode/.gradle,type=volume",
     // Persists the downloaded Chromium binary so rebuilds don't re-fetch it.
-    "source=${localWorkspaceFolderBasename}-playwright,target=/home/vscode/.cache/ms-playwright,type=volume"
+    "source=${localWorkspaceFolderBasename}-playwright,target=/home/vscode/.cache/ms-playwright,type=volume",
+    // Persists bash history across rebuilds (a volume can't be mounted on a single file, hence the directory).
+    "source=${localWorkspaceFolderBasename}-history,target=/home/vscode/.shell-history,type=volume"
   ],
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
@@ -63,5 +65,9 @@
       }
     }
   },
-  "remoteUser": "vscode"
+  "remoteUser": "vscode",
+  "containerEnv": {
+    "HISTFILE": "/home/vscode/.shell-history/.bash_history",
+    "PROMPT_COMMAND": "history -a"
+  },
 }
