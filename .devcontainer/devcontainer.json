@@ -4,7 +4,7 @@
   "features": {
     // Fluxbox + noVNC on :6080; sets DISPLAY itself so Playwright can run headed.
     "ghcr.io/devcontainers/features/desktop-lite:1": {},
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    "ghcr.io/devcontainers/features/docker-in-docker:4": {}
   },
   // Chromium needs more shared memory than Docker's tiny default or it crashes/OOMs.
   "runArgs": [
